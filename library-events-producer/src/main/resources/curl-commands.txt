@@ -1,0 +1,10 @@
+curl --location --request POST 'localhost:8080/v1/library-event' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+    "id": 1,
+    "book": {
+        "id": 1,
+        "name": "Black Phone",
+        "author": "unknown"
+    }
+}'
