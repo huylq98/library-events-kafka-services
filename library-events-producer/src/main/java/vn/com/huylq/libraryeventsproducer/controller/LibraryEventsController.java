@@ -3,16 +3,12 @@ package vn.com.huylq.libraryeventsproducer.controller;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import vn.com.huylq.libraryeventsproducer.constant.LibraryEventType;
 import vn.com.huylq.libraryeventsproducer.domain.LibraryEvent;
 import vn.com.huylq.libraryeventsproducer.producer.LibraryEventsProducer;
+
+import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/v1/library-event")
@@ -23,7 +19,7 @@ public class LibraryEventsController {
 
   @PostMapping
   @ResponseStatus(HttpStatus.CREATED)
-  public LibraryEvent scanNewBook(@RequestBody LibraryEvent libraryEvent)
+  public LibraryEvent scanNewBook(@Valid @RequestBody LibraryEvent libraryEvent)
       throws JsonProcessingException {
 
     libraryEvent.setLibraryEventType(LibraryEventType.NEW);

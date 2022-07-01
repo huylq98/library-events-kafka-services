@@ -2,8 +2,6 @@ package vn.com.huylq.libraryeventsproducer.producer;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import java.util.Arrays;
-import java.util.List;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
@@ -19,6 +17,9 @@ import org.springframework.util.concurrent.ListenableFuture;
 import org.springframework.util.concurrent.ListenableFutureCallback;
 import vn.com.huylq.libraryeventsproducer.domain.LibraryEvent;
 
+import java.util.Arrays;
+import java.util.List;
+
 @Component
 @Slf4j
 @RequiredArgsConstructor
@@ -29,7 +30,7 @@ public class LibraryEventsProducer {
   private final Environment environment;
   private static final String TOPIC = "library-events";
 
-  public void sendLibraryEvents(LibraryEvent libraryEvent) throws JsonProcessingException {
+  public  ListenableFuture<SendResult<Integer, String>> sendLibraryEvents(LibraryEvent libraryEvent) throws JsonProcessingException {
     Integer key = libraryEvent.getId();
     String value = objectMapper.writeValueAsString(libraryEvent);
     ProducerRecord<Integer, String> producerRecord = buildRecord(key, value);
@@ -46,6 +47,7 @@ public class LibraryEventsProducer {
         handleSuccess(key, value, result);
       }
     });
+    return future;
   }
 
   private ProducerRecord<Integer, String> buildRecord(Integer k, String v) {
