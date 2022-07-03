@@ -1,6 +1,7 @@
 package vn.com.huylq.libraryeventsproducer.integration;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -27,6 +28,7 @@ import org.springframework.kafka.test.EmbeddedKafkaBroker;
 import org.springframework.kafka.test.context.EmbeddedKafka;
 import org.springframework.kafka.test.utils.KafkaTestUtils;
 import org.springframework.test.context.TestPropertySource;
+import vn.com.huylq.libraryeventsproducer.constant.LibraryEventType;
 import vn.com.huylq.libraryeventsproducer.domain.Book;
 import vn.com.huylq.libraryeventsproducer.domain.LibraryEvent;
 
@@ -36,6 +38,7 @@ import vn.com.huylq.libraryeventsproducer.domain.LibraryEvent;
     "spring.kafka.producer.bootstrap-servers=${spring.embedded.kafka.brokers}",
     "spring.kafka.admin.properties.bootstrap.servers=${spring.embedded.kafka.brokers}"
 })
+@SuppressWarnings("all")
 class LibraryEventsControllerIntegrationTest {
 
   @Autowired
@@ -62,8 +65,8 @@ class LibraryEventsControllerIntegrationTest {
   }
 
   @Test
-  @Timeout(3)
-  void scanNewBookTest_withTestRestTemplate() {
+  @Timeout(5)
+  void scanNewBookTest() {
     // given
     Book book = Book.builder()
         .id(1)
@@ -91,5 +94,34 @@ class LibraryEventsControllerIntegrationTest {
         "library-events");
     String expectedValue = "{\"id\":null,\"libraryEventType\":\"NEW\",\"book\":{\"id\":1,\"name\":\"Black Phone\",\"author\":\"Stephen\"}}";
     assertEquals(expectedValue, consumerRecord.value());
+  }
+
+  @Test
+  @Timeout(5)
+  void updateExistedBook() {
+    // given
+    Book book = Book.builder()
+        .id(1)
+        .name("Black Phone")
+        .author("Stephen")
+        .build();
+
+    LibraryEvent libraryEvent = LibraryEvent.builder()
+        .id(1)
+        .book(book)
+        .build();
+
+    HttpHeaders headers = new HttpHeaders();
+    headers.set(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
+    HttpEntity<LibraryEvent> body = new HttpEntity<>(libraryEvent, headers);
+
+    // when
+    ResponseEntity<LibraryEvent> response = restTemplate.exchange("/v1/library-event",
+        HttpMethod.PUT, body, LibraryEvent.class);
+
+    // then
+    assertEquals(HttpStatus.OK, response.getStatusCode());
+    assertNotNull(response.getBody());
+    assertEquals(LibraryEventType.UPDATE, response.getBody().getLibraryEventType());
   }
 }

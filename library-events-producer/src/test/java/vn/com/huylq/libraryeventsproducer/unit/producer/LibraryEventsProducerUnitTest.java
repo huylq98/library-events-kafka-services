@@ -1,7 +1,13 @@
 package vn.com.huylq.libraryeventsproducer.unit.producer;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.isA;
+import static org.mockito.Mockito.when;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.concurrent.ExecutionException;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.clients.producer.RecordMetadata;
 import org.apache.kafka.common.TopicPartition;
@@ -19,13 +25,6 @@ import org.springframework.util.concurrent.SettableListenableFuture;
 import vn.com.huylq.libraryeventsproducer.domain.Book;
 import vn.com.huylq.libraryeventsproducer.domain.LibraryEvent;
 import vn.com.huylq.libraryeventsproducer.producer.LibraryEventsProducer;
-
-import java.util.concurrent.ExecutionException;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.isA;
-import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 @SuppressWarnings("java:S5783")
@@ -101,7 +100,6 @@ class LibraryEventsProducerUnitTest {
         // then
         SendResult<Integer, String> result = listenableFuture.get();
         assertEquals(1, result.getRecordMetadata().partition());
-
     }
 
 }
