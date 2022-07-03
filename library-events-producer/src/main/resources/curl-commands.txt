@@ -10,10 +10,33 @@ curl --location --request POST 'localhost:8080/v1/library-event' \
 }'
 ========================================
 ----- UPDATE EXISTED BOOK -----
-curl --location --request POST 'localhost:8080/v1/library-event' \
+curl --location --request PUT 'localhost:8080/v1/library-event' \
 --header 'Content-Type: application/json' \
 --data-raw '{
     "id": 1,
+    "book": {
+        "id": 1,
+        "name": "Black Phone",
+        "author": "Joe Hill"
+    }
+}'
+========================================
+----- UPDATE EXISTED BOOK WITH NO ID-----
+curl --location --request PUT 'localhost:8080/v1/library-event' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+    "book": {
+        "id": 1,
+        "name": "Black Phone",
+        "author": "Joe Hill"
+    }
+}'
+========================================
+----- UPDATE EXISTED BOOK WITH ID 2-----
+curl --location --request PUT 'localhost:8080/v1/library-event' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+    "id": 2,
     "book": {
         "id": 1,
         "name": "Black Phone",
