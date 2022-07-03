@@ -1,3 +1,15 @@
+----- SAVE NEW BOOK -----
+curl --location --request POST 'localhost:8080/v1/library-event' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+    "book": {
+        "id": 1,
+        "name": "Black Phone",
+        "author": "unknown"
+    }
+}'
+========================================
+----- UPDATE EXISTED BOOK -----
 curl --location --request POST 'localhost:8080/v1/library-event' \
 --header 'Content-Type: application/json' \
 --data-raw '{
@@ -5,6 +17,6 @@ curl --location --request POST 'localhost:8080/v1/library-event' \
     "book": {
         "id": 1,
         "name": "Black Phone",
-        "author": "unknown"
+        "author": "Joe Hill"
     }
 }'
