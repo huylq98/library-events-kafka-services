@@ -11,15 +11,16 @@ import vn.com.huylq.libraryeventsconsumer.service.LibraryEventsService;
 @Component
 @RequiredArgsConstructor
 @Slf4j
-public class LibraryEventsConsumer {
+public class LibraryEventsRetryConsumer {
 
   private final LibraryEventsService libraryEventsService;
 
-  @KafkaListener(topics = {"library-events"},
-      groupId = "library-events-listener-group")
+  @KafkaListener(topics = {"${topics.retry}"},
+      autoStartup = "${retryListener.autoStartup:true}",
+      groupId = "retry-consumer-group")
   public void onMessage(ConsumerRecord<Integer, String> consumerRecord)
       throws JsonProcessingException {
-    log.info("ConsumerRecord: {}", consumerRecord);
+    log.info("RetryConsumerRecord: {}", consumerRecord);
     libraryEventsService.process(consumerRecord);
   }
 }
