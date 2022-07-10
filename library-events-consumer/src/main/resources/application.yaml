@@ -3,6 +3,9 @@ spring:
     active: dev
 server:
   port: 8081
+topics:
+  retry: library-events.RETRY
+  dlt: library-events.DLT
 
 ---
 spring:
@@ -29,6 +32,9 @@ spring:
     database: h2
     database-platform: org.hibernate.dialect.H2Dialect
     generate-ddl: true
+    properties:
+      hibernate:
+        globally_quoted_identifiers: true
   h2:
     console:
       enabled: true
